@@ -96,7 +96,7 @@ $(state).appendTo(currentDayEl);
 // };
 
 
-      });
+      })
 
 function getWeather(lat,lon) {
   fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly,alerts&appid=${apiKey}
@@ -150,21 +150,22 @@ currentList.appendChild(li2);
 currentList.appendChild(divEl);
 
 currentList.appendChild(li3);
-
+      
 
 // var currentDay = function () {
   
 // }
- for (let index = 0; index < array.length; index++) {
-   const element = array[index];
+//  for (var i = 0; in < array.length; index++) {
+//    const element = array[index];
    
- }
+//  }
 // currentDay();
 var futureArray = data.daily;
+function fiveDayInfo {
 
-$("#future").html("<h4 class='mt-3'> 5-Day Forecast:</h4>").append("<div class=\"row\">");
-  for (let index = 0; index = 5; index++) {
+  for (var i = 0; i < 5; index++) {
     var futureArray = data.daily[i];
+    console.log(futureArray[i]);
 
 var UVI = data.daily[i].uvi;
 var descrip = data.daily[i].weather[0].description;
@@ -173,27 +174,28 @@ var dailyMax = data.daily[i].temp.max;
 var main = data.daily[i].weather[0].main;
 var wind = data.daily[i].wind_speed;
 
+$("#future").html("<h4 class='mt-3'> 5-Day Forecast:</h4>").append("<div class=\"fiveDay\">");
 var col = $("<div>").addClass("col-md-2");
 var card = $("<div>").addClass("card bg-primary text-white");
 var body = $("<div>").addClass("card-body p-2");
 var title = $("<h5>").addClass("card-title").text(new Date(data.futureArray[i].dt_txt).toLocaleDateString());
 var img = $("<img>").attr("src", "http://openweathermap.org/img/w/" + futureArray[i].weather[0].icon + ".png" );
-var p1 = $("<p>").addClass("card-text").text("Min Temp: " + futureArray[i].dailyMin + 'F');
-var p2 = $("<p>").addClass("card-text").text("Max Temp: " + futureArray[i].dailyMax);
-var p3 = $("<p>").addClass("card-text").text(futureArray[i].descrip)
+var p1 = $("<p>").addClass("card-text").text("Min Temp: " + futureArray[i] + dailyMin + 'F');
+var p2 = $("<p>").addClass("card-text").text("Max Temp: " + futureArray[i] + dailyMax);
+var p3 = $("<p>").addClass("card-text").text(futureArray[i] + descrip)
 
 
 col.append(card.append(body.append(title, img, p1, p2, p3)));
 $("#future .row").append(col);
-}
-}
+}}
+})
 
 
 // }
 
-      });
+      }
 
-}
+    
 
 formEl.on("submit", handleFormSubmit );
 
