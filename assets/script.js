@@ -1,13 +1,17 @@
 console.log ($)
-// var cityName = "Austin";
+var cityName = "houston";
 var apiKey = "85911b7ddaa78c45cace16f7435645a6";
-
+var recentSearch = [];
 var submitted = $("#submitButton");
-var cityName = "";
+// var cityName = "";
 var formEl = $('#citySelector');
 var cityNameEl = $('#cityName');
 var recentsEl = $('.recentSearches');
-var currentDayEl = $('currentDay')
+var currentTempEl = $('#currentTemp');
+var currentDayEl = $('.currentDay');
+var cardBodyEl = $('.cardbody');
+var currentDataEl = document.getElementById("currentData");
+console.log(document.documentElement);
 //TODO: CREATE PAST SEARCHES BUTTONS
 // var printSkills = function (name, date) {
 //   var listEl = $('<li>');
@@ -15,6 +19,7 @@ var currentDayEl = $('currentDay')
 //   listEl.addClass('list-group-item').text(listDetail);
 //   listEl.appendTo(skillsListEl);
 // };
+
 
 
 var handleFormSubmit = function (event) {
@@ -29,16 +34,16 @@ var handleFormSubmit = function (event) {
     return;
   
     
-//   // printSkills(cityInput);
 
-//   // resets form
-  // 
   
 }};
 
 
 
-// localStorage.setItem("recentSearches", cityNameEl);
+// recentSearch.push(cityName);
+// localStorage.setItem("lastSearch", cityName);
+// localStorage.setItem("recentSearches", JSON.stringify(recentSearch));
+
 // localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
 
 // add last-searched-city data into savedCities[]
@@ -61,6 +66,7 @@ fetch (`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid
      method: 'GET', //GET is the default.
       credentials: 'same-origin', // include, *same-origin, omit
       redirect: 'follow', // manual, *follow, error
+      
     })
       .then(function (response) { console.log(response)
 
@@ -74,19 +80,20 @@ fetch (`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid
 
         var lon = data[0].lon;
 getWeather(lat,lon);
-var name = data[0].name;
-var state = data[0].state;
+// var name = data[0].name;
+// var state = data[0].state;
 console.log(name)
 console.log(state);
+$(state).appendTo(currentDayEl);
 
-var currentState = function (name, state) {
-  var headerEl = $('<h3>');
-  var showState = name.concat(',', state);
-  headerEl.addClass('currentState').text(showState);
-  headerEl.appendTo(currentDay);
+// var currentState = function (name, state) {
+//   var headerEl = $('<h3>');
+//   var showState = name.concat(',', state);
+//   headerEl.addClass('currentState').text(showState);
+//   headerEl.appendTo(currentDay);
 
-  currentState();
-};
+//   currentState();
+// };
 
 
       });
@@ -117,22 +124,86 @@ var humidity = data.current.humidity;
 console.log(feelsLike);
 console.log(humidity);
 
-// future = function {
-// var dailyMin = data.daily[i].temp.min;
-// var dailyMax = data.daily[i].temp.max;
-// var main = data.daily[i].weather.[0].main;
-// var wind = data.daily[i].wind_speed;
-// 
+var currentHumidity = data.current.humidity;
+var currentUV = data.current.uvi;
+var currentTemp = data.current.temp;
+var currentIcon = data.current.weather[0].icon;
+
+var divEl = document.createElement("div");
+var currentList = document.createElement("ul");
+var li1 = document.createElement("li1");
+var li2 = document.createElement("li2");
+var li3 = document.createElement("li3");
+
+li1.textContent = `Temp: ${currentTemp}`;
+li2.textContent = ("Humidity: " + currentHumidity);
+li3.textContent = ("UV Index: " + currentUV);
+
+
+currentDataEl.appendChild(currentList);
+currentList.appendChild(divEl);
+
+currentList.appendChild(li1);
+currentList.appendChild(divEl);
+
+currentList.appendChild(li2);
+currentList.appendChild(divEl);
+
+currentList.appendChild(li3);
+
+
+// var currentDay = function () {
+  
+// }
+ for (let index = 0; index < array.length; index++) {
+   const element = array[index];
+   
+ }
+// currentDay();
+var futureArray = data.daily;
+
+$("#future").html("<h4 class='mt-3'> 5-Day Forecast:</h4>").append("<div class=\"row\">");
+  for (let index = 0; index = 5; index++) {
+    var futureArray = data.daily[i];
+
+var UVI = data.daily[i].uvi;
+var descrip = data.daily[i].weather[0].description;
+var dailyMin = data.daily[i].temp.min;
+var dailyMax = data.daily[i].temp.max;
+var main = data.daily[i].weather[0].main;
+var wind = data.daily[i].wind_speed;
+
+var col = $("<div>").addClass("col-md-2");
+var card = $("<div>").addClass("card bg-primary text-white");
+var body = $("<div>").addClass("card-body p-2");
+var title = $("<h5>").addClass("card-title").text(new Date(data.futureArray[i].dt_txt).toLocaleDateString());
+var img = $("<img>").attr("src", "http://openweathermap.org/img/w/" + futureArray[i].weather[0].icon + ".png" );
+var p1 = $("<p>").addClass("card-text").text("Min Temp: " + futureArray[i].dailyMin + 'F');
+var p2 = $("<p>").addClass("card-text").text("Max Temp: " + futureArray[i].dailyMax);
+var p3 = $("<p>").addClass("card-text").text(futureArray[i].descrip)
+
+
+col.append(card.append(body.append(title, img, p1, p2, p3)));
+$("#future .row").append(col);
+}
+}
+
+
 // }
 
       });
 
 }
 
-
 formEl.on("submit", handleFormSubmit );
 
-cityNameEl.val('');
+
+// cityNameEl.val('');
+
+
+
+
+
 
 
 // 
