@@ -1,9 +1,9 @@
 console.log($);
 // var cityName = "houston";
 var apiKey = "85911b7ddaa78c45cace16f7435645a6";
-var recentSearch = [];
+var recentSearch = JSON.parse(localStorage.getItem("recentSearches"))||[];
+console.log(recentSearch);
 var submitted = $("#submitButton");
-var cityName = "";
 var formEl = $("#citySelector");
 var cityNameEl = $("#cityName");
 var recentsEl = $(".recentSearches");
@@ -11,7 +11,8 @@ var currentTempEl = $("#currentTemp");
 var currentDayEl = $(".currentDay");
 var cardBodyEl = $(".cardbody");
 var currentDataEl = document.getElementById("currentData");
-console.log(document.documentElement);
+var lastSearch = localStorage.getItem("lastSearch")||'';
+console.log(lastSearch);
 //TODO: CREATE PAST SEARCHES BUTTONS
 // var printSkills = function (name, date) {
 //   var listEl = $('<li>');
@@ -21,24 +22,32 @@ console.log(document.documentElement);
 // };
 
 var handleFormSubmit = function (event) {
-  console.log("click");
+  
   event.preventDefault();
 
-  cityName = cityNameEl.val();
-  console.log(cityName);
+  var cityName = cityNameEl.val();
+
 
   if (!cityName) {
-    console.log("Please select a city.");
+    alert("Please select a city.");
     return;
   }
+  if(recentSearch.indexOf(cityName) === -1){
+    console.log(cityName);
+    recentSearch.push(cityName);
+    localStorage.setItem("recentSearches", JSON.stringify(recentSearch))
+
+  }
   fetchCity(cityName);
+
+  localStorage.setItem("lastSearch", cityName);
+ 
+  formEl.value = "";
+  
+
 };
 
-// recentSearch.push(cityName);
-// localStorage.setItem("lastSearch", cityName);
-// localStorage.setItem("recentSearches", JSON.stringify(recentSearch));
 
-// localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
 
 // add last-searched-city data into savedCities[]
 //  if (savedCities.indexOf(city) < 0) {
@@ -53,7 +62,8 @@ var handleFormSubmit = function (event) {
 //   submitted.addEventListener("click", getWeather, false);
 // }
 
-var fetchCity = function () {
+var fetchCity = function (cityName) {
+  console.log(cityName);
   fetch(
     `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`,
     {
@@ -63,23 +73,18 @@ var fetchCity = function () {
     }
   )
     .then(function (response) {
-      console.log(response);
+      // console.log(response);
 
       return response.json();
     })
     .then(function (data) {
       console.log({ data });
 
-      var lat = data[0].lat;
-      console.log(lat);
-
+      var lat = data[0].lat;     
       var lon = data[0].lon;
       getWeather(lat, lon);
-      // var name = data[0].name;
-      // var state = data[0].state;
-      console.log(name);
-      console.log(state);
-      $(state).appendTo(currentDayEl);
+      
+      
 
       // var currentState = function (name, state) {
       //   var headerEl = $('<h3>');
@@ -159,27 +164,29 @@ function getWeather(lat, lon) {
 
 function fiveDayInfo(futureArray) {
   console.log(futureArray);
-  // var futureArray = data.daily;
+  
+  var futureTitle = $("<h4>").addClass("mt-3 col-12").text("5- Day Forecast: ")
+  var cardRow = $("<div>").addClass("row").attr("id","future")
+$("#5-Day").append(futureTitle);
+$(".parent").append(cardRow)
   for (var i = 0; i < 5; i++) {
     var futureDay = futureArray[i];
     console.log(futureDay);
-console.log(i);
+
     var uvi = futureArray[i].uvi;
     var descrip = futureArray[i].weather[0].description;
     var dailyMin = futureArray[i].temp.min;
     var dailyMax = futureArray[i].temp.max;
     var main = futureArray[i].weather[0].main;
     var wind = futureArray[i].wind_speed;
-
-    $("#future")
-      .html("<h4 class='mt-3'> 5-Day Forecast:</h4>")
-      .append('<div class="fiveDay">');
-    var col = $("<div>").addClass("col-md-2");
     var card = $("<div>").addClass("card");
+    var col = $("<div>").addClass("col-md-2");
+    
     var body = $("<div>").addClass("card-body p-2");
     var title = $("<h5>")
       .addClass("card-title")
       .text(new Date(futureArray[i].dt_txt).toLocaleDateString());
+
     var img = $("<img>").attr(
       "src",
       "http://openweathermap.org/img/w/" +
@@ -188,23 +195,30 @@ console.log(i);
     );
     var p1 = $("<p>")
       .addClass("card-text")
-      .text("Min Temp: " + futureArray[i] + dailyMin + "F");
+      .text("Min Temp: " + dailyMin + "F");
     var p2 = $("<p>")
       .addClass("card-text")
-      .text("Max Temp: " + futureArray[i] + dailyMax);
+      .text("Max Temp: " + dailyMax);
     var p3 = $("<p>")
       .addClass("card-text")
-      .text(futureArray[i] + descrip);
+      .text(descrip);
     var p4 = $("<p>")
       .addClass("card-text")
-      .text("UV Index: " + futureArray[i] + uvi);
+      .text("UV Index: " +  uvi);
 
-    col.append(card.append(body.append(title, img, p1, p2, p3, p4)));
-    $("#future .row").append(col);
+      $("#future").append(col.append(card.append(body.append(title.append(img),p1,p2,p3,p4))));
+
+
   }
-}
+ }
 
 formEl.on("submit", handleFormSubmit);
+
+
+
+
+
+
 
 // cityNameEl.val('');
 
