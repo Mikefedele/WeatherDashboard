@@ -15,7 +15,7 @@ This is a Weather Dashboard where you can get current & five day forecasts by ci
 
 
 ## Deployed
-[password generator](https://mikefedele.github.io/Quiz/)
+[password generator](https://mikefedele.github.io/WeatherDashboard/)
 
 ## Screenshot
 

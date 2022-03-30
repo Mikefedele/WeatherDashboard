@@ -1,15 +1,15 @@
-console.log ($)
-var cityName = "houston";
+console.log($);
+// var cityName = "houston";
 var apiKey = "85911b7ddaa78c45cace16f7435645a6";
 var recentSearch = [];
 var submitted = $("#submitButton");
-// var cityName = "";
-var formEl = $('#citySelector');
-var cityNameEl = $('#cityName');
-var recentsEl = $('.recentSearches');
-var currentTempEl = $('#currentTemp');
-var currentDayEl = $('.currentDay');
-var cardBodyEl = $('.cardbody');
+var cityName = "";
+var formEl = $("#citySelector");
+var cityNameEl = $("#cityName");
+var recentsEl = $(".recentSearches");
+var currentTempEl = $("#currentTemp");
+var currentDayEl = $(".currentDay");
+var cardBodyEl = $(".cardbody");
 var currentDataEl = document.getElementById("currentData");
 console.log(document.documentElement);
 //TODO: CREATE PAST SEARCHES BUTTONS
@@ -20,8 +20,6 @@ console.log(document.documentElement);
 //   listEl.appendTo(skillsListEl);
 // };
 
-
-
 var handleFormSubmit = function (event) {
   console.log("click");
   event.preventDefault();
@@ -30,15 +28,11 @@ var handleFormSubmit = function (event) {
   console.log(cityName);
 
   if (!cityName) {
-    console.log('Please select a city.');
+    console.log("Please select a city.");
     return;
-  
-    
-
-  
-}};
-
-
+  }
+  fetchCity(cityName);
+};
 
 // recentSearch.push(cityName);
 // localStorage.setItem("lastSearch", cityName);
@@ -53,168 +47,173 @@ var handleFormSubmit = function (event) {
 
 //  recentSearches[] to localStorage
 //  localStorage.setItem("lastSearched", city);
-//  
+//
 
 // if (submitted.addEventListener) {
 //   submitted.addEventListener("click", getWeather, false);
 // }
- 
 
+var fetchCity = function () {
+  fetch(
+    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`,
+    {
+      method: "GET", //GET is the default.
+      credentials: "same-origin", // include, *same-origin, omit
+      redirect: "follow", // manual, *follow, error
+    }
+  )
+    .then(function (response) {
+      console.log(response);
 
-fetch (`http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`,{
-  
-     method: 'GET', //GET is the default.
-      credentials: 'same-origin', // include, *same-origin, omit
-      redirect: 'follow', // manual, *follow, error
-      
+      return response.json();
     })
-      .then(function (response) { console.log(response)
+    .then(function (data) {
+      console.log({ data });
 
-        return response.json();
-      })
-      .then(function (data) {
-        console.log(data);
+      var lat = data[0].lat;
+      console.log(lat);
 
-        var lat = data[0].lat;
-        console.log(lat);
+      var lon = data[0].lon;
+      getWeather(lat, lon);
+      // var name = data[0].name;
+      // var state = data[0].state;
+      console.log(name);
+      console.log(state);
+      $(state).appendTo(currentDayEl);
 
-        var lon = data[0].lon;
-getWeather(lat,lon);
-// var name = data[0].name;
-// var state = data[0].state;
-console.log(name)
-console.log(state);
-$(state).appendTo(currentDayEl);
+      // var currentState = function (name, state) {
+      //   var headerEl = $('<h3>');
+      //   var showState = name.concat(',', state);
+      //   headerEl.addClass('currentState').text(showState);
+      //   headerEl.appendTo(currentDay);
 
-// var currentState = function (name, state) {
-//   var headerEl = $('<h3>');
-//   var showState = name.concat(',', state);
-//   headerEl.addClass('currentState').text(showState);
-//   headerEl.appendTo(currentDay);
+      //   currentState();
+      // };
+    });
+};
+function getWeather(lat, lon) {
+  fetch(
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly,alerts&appid=${apiKey}
+  `,
+    {
+      method: "GET", //GET is the default.
+      credentials: "same-origin", // include, *same-origin, omit
+      redirect: "follow", // manual, *follow, error
+    }
+  )
+    .then(function (response) {
+      console.log(response);
 
-//   currentState();
-// };
-
-
-      })
-
-function getWeather(lat,lon) {
-  fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly,alerts&appid=${apiKey}
-  `,{
-  
-     method: 'GET', //GET is the default.
-      credentials: 'same-origin', // include, *same-origin, omit
-      redirect: 'follow', // manual, *follow, error
+      return response.json();
     })
-      .then(function (response) { console.log(response)
+    .then(function (data) {
+      console.log(data);
+      var temp = data.current.temp;
+      console.log(temp);
+      var day = moment.unix(data.current.dt).format("ddd, MMMM Do, YYYY");
+      console.log(day);
+      //buildHTML
 
-        return response.json();
-      })
-      .then(function (data) {
-        console.log(data);
-var temp = data.current.temp;
-console.log(temp)
-var day = moment.unix(data.current.dt).format("ddd, MMMM Do, YYYY");
-console.log(day)
-//buildHTML
+      var feelsLike = data.current.feels_like;
+      var humidity = data.current.humidity;
 
-var feelsLike = data.current.feels_like;
-var humidity = data.current.humidity;
+      console.log(feelsLike);
+      console.log(humidity);
 
-console.log(feelsLike);
-console.log(humidity);
+      var currentHumidity = data.current.humidity;
+      var currentUV = data.current.uvi;
+      var currentTemp = data.current.temp;
+      var currentIcon = data.current.weather[0].icon;
 
-var currentHumidity = data.current.humidity;
-var currentUV = data.current.uvi;
-var currentTemp = data.current.temp;
-var currentIcon = data.current.weather[0].icon;
+      var divEl = document.createElement("div");
+      var currentList = document.createElement("ul");
+      var li1 = document.createElement("li1");
+      var li2 = document.createElement("li2");
+      var li3 = document.createElement("li3");
 
-var divEl = document.createElement("div");
-var currentList = document.createElement("ul");
-var li1 = document.createElement("li1");
-var li2 = document.createElement("li2");
-var li3 = document.createElement("li3");
+      li1.textContent = `Temp: ${currentTemp}`;
+      li2.textContent = "Humidity: " + currentHumidity;
+      li3.textContent = "UV Index: " + currentUV;
 
-li1.textContent = `Temp: ${currentTemp}`;
-li2.textContent = ("Humidity: " + currentHumidity);
-li3.textContent = ("UV Index: " + currentUV);
-
-
-currentDataEl.appendChild(currentList);
-currentList.appendChild(divEl);
-
-currentList.appendChild(li1);
-currentList.appendChild(divEl);
-
-currentList.appendChild(li2);
-currentList.appendChild(divEl);
-
-currentList.appendChild(li3);
-      
-
-// var currentDay = function () {
-  
-// }
-//  for (var i = 0; in < array.length; index++) {
-//    const element = array[index];
-   
-//  }
-// currentDay();
-var futureArray = data.daily;
-function fiveDayInfo {
-
-  for (var i = 0; i < 5; index++) {
-    var futureArray = data.daily[i];
-    console.log(futureArray[i]);
-
-var UVI = data.daily[i].uvi;
-var descrip = data.daily[i].weather[0].description;
-var dailyMin = data.daily[i].temp.min;
-var dailyMax = data.daily[i].temp.max;
-var main = data.daily[i].weather[0].main;
-var wind = data.daily[i].wind_speed;
-
-$("#future").html("<h4 class='mt-3'> 5-Day Forecast:</h4>").append("<div class=\"fiveDay\">");
-var col = $("<div>").addClass("col-md-2");
-var card = $("<div>").addClass("card bg-primary text-white");
-var body = $("<div>").addClass("card-body p-2");
-var title = $("<h5>").addClass("card-title").text(new Date(data.futureArray[i].dt_txt).toLocaleDateString());
-var img = $("<img>").attr("src", "http://openweathermap.org/img/w/" + futureArray[i].weather[0].icon + ".png" );
-var p1 = $("<p>").addClass("card-text").text("Min Temp: " + futureArray[i] + dailyMin + 'F');
-var p2 = $("<p>").addClass("card-text").text("Max Temp: " + futureArray[i] + dailyMax);
-var p3 = $("<p>").addClass("card-text").text(futureArray[i] + descrip)
+      currentDataEl.append(currentList);
+      currentList.append(divEl);
+      currentList.append(li1);
 
 
-col.append(card.append(body.append(title, img, p1, p2, p3)));
-$("#future .row").append(col);
-}}
-})
+      currentList.append(li2);
+
+      currentList.append(li3);
 
 
-// }
+      fiveDayInfo(data.daily);
+      // var currentDay = function () {
 
-      }
+      // }
+      //  for (var i = 0; in < array.length; index++) {
+      //    const element = array[index];
 
-    
+      //  }
+      // currentDay();
+    });
+}
 
-formEl.on("submit", handleFormSubmit );
+function fiveDayInfo(futureArray) {
+  console.log(futureArray);
+  // var futureArray = data.daily;
+  for (var i = 0; i < 5; i++) {
+    var futureDay = futureArray[i];
+    console.log(futureDay);
+console.log(i);
+    var uvi = futureArray[i].uvi;
+    var descrip = futureArray[i].weather[0].description;
+    var dailyMin = futureArray[i].temp.min;
+    var dailyMax = futureArray[i].temp.max;
+    var main = futureArray[i].weather[0].main;
+    var wind = futureArray[i].wind_speed;
 
+    $("#future")
+      .html("<h4 class='mt-3'> 5-Day Forecast:</h4>")
+      .append('<div class="fiveDay">');
+    var col = $("<div>").addClass("col-md-2");
+    var card = $("<div>").addClass("card");
+    var body = $("<div>").addClass("card-body p-2");
+    var title = $("<h5>")
+      .addClass("card-title")
+      .text(new Date(futureArray[i].dt_txt).toLocaleDateString());
+    var img = $("<img>").attr(
+      "src",
+      "http://openweathermap.org/img/w/" +
+        futureArray[i].weather[0].icon +
+        ".png"
+    );
+    var p1 = $("<p>")
+      .addClass("card-text")
+      .text("Min Temp: " + futureArray[i] + dailyMin + "F");
+    var p2 = $("<p>")
+      .addClass("card-text")
+      .text("Max Temp: " + futureArray[i] + dailyMax);
+    var p3 = $("<p>")
+      .addClass("card-text")
+      .text(futureArray[i] + descrip);
+    var p4 = $("<p>")
+      .addClass("card-text")
+      .text("UV Index: " + futureArray[i] + uvi);
+
+    col.append(card.append(body.append(title, img, p1, p2, p3, p4)));
+    $("#future .row").append(col);
+  }
+}
+
+formEl.on("submit", handleFormSubmit);
 
 // cityNameEl.val('');
 
-
-
-
-
-
-
-// 
+//
 // Your API key is 85911b7ddaa78c45cace16f7435645a6
 // Endpoint:
 // - Please, use the endpoint api.openweathermap.org for your API calls
 // - Example of API call:
 // api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=85911b7ddaa78c45cace16f7435645a6
-
 
 // GIVEN a weather dashboard with form inputs
 // WHEN I search for a city
