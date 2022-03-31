@@ -13,13 +13,16 @@ var cardBodyEl = $(".cardbody");
 var currentDataEl = document.getElementById("currentData");
 var lastSearch = localStorage.getItem("lastSearch")||'';
 console.log(lastSearch);
+var today = document.getElementById("currentLoc");
+today.textContent = moment().format("ddd, MMMM Do, YYYY");
+var cityName = "";
+
+
 //TODO: CREATE PAST SEARCHES BUTTONS
-// var printSkills = function (name, date) {
-//   var listEl = $('<li>');
-//   var listDetail = name.concat(' on ', date);
-//   listEl.addClass('list-group-item').text(listDetail);
-//   listEl.appendTo(skillsListEl);
-// };
+//todo set city name to show in current display
+//todo have last searched show on page reload/open
+
+
 
 var handleFormSubmit = function (event) {
   
@@ -119,6 +122,7 @@ function getWeather(lat, lon) {
       console.log(day);
       //buildHTML
 
+      var today = document.getElementById("currentLoc");
       var feelsLike = data.current.feels_like;
       var humidity = data.current.humidity;
 
@@ -140,9 +144,12 @@ function getWeather(lat, lon) {
       li2.textContent = "Humidity: " + currentHumidity;
       li3.textContent = "UV Index: " + currentUV;
 
+      today.textContent = day;
+
       currentDataEl.append(currentList);
       currentList.append(divEl);
       currentList.append(li1);
+
 
 
       currentList.append(li2);
