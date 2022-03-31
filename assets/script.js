@@ -181,11 +181,12 @@ $(".parent").append(cardRow)
     var wind = futureArray[i].wind_speed;
     var card = $("<div>").addClass("card");
     var col = $("<div>").addClass("col-md-2");
+    var futureTime = moment.unix(futureArray[i].dt).format("MM/DD/YY");
     
     var body = $("<div>").addClass("card-body p-2");
     var title = $("<h5>")
       .addClass("card-title")
-      .text(new Date(futureArray[i].dt_txt).toLocaleDateString());
+      .text(futureTime);
 
     var img = $("<img>").attr(
       "src",
