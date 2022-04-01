@@ -16,6 +16,7 @@ console.log(lastSearch);
 var today = document.getElementById("currentLoc");
 today.textContent = moment().format("ddd, MMMM Do, YYYY");
 var cityName = "";
+var buttonsList = document.getElementById("recentbtns")
 
 
 //TODO: CREATE PAST SEARCHES BUTTONS
@@ -35,22 +36,39 @@ var handleFormSubmit = function (event) {
     alert("Please select a city.");
     return;
   }
+  
   if(recentSearch.indexOf(cityName) === -1){
     console.log(cityName);
     recentSearch.push(cityName);
     localStorage.setItem("recentSearches", JSON.stringify(recentSearch))
 
-  }
+  };
+  //is this working?
+  if(recentSearch.indexOf(cityName) === 5){    
+    recentSearches.pop();
+  };
+
   fetchCity(cityName);
 
-  localStorage.setItem("lastSearch", cityName);
- 
-  formEl.value = "";
+  
+
+
+  localStorage.setItem("lastSearch", cityName); 
+  // formEl.value = "";
   
 
 };
 
+for (var i = 0; i < 5; i++) {
+  var myButtons = recentSearch[i];
+  console.log(myButtons);
 
+var recentButtons = document.createElement("button");
+  buttonsList.appendChild(recentButtons);
+  recentButtons.setAttribute("class", "cityList");
+  recentButtons.textContent = recentSearch[i];
+
+}
 
 // add last-searched-city data into savedCities[]
 //  if (savedCities.indexOf(city) < 0) {
@@ -213,11 +231,27 @@ $(".parent").append(cardRow)
     var p4 = $("<p>")
       .addClass("card-text")
       .text("UV Index: " +  uvi);
+      if (uvi < 4 ) {
+        p4.css("background-color", "green")
+       }
+       else if ((uvi >= 4 < 8)) {
+        p4.css("background-color", "orange")
+       };
 
+       if (uvi >= 8) {
+        p4.css("background-color", "red")
+       }
+      
       $("#future").append(col.append(card.append(body.append(title.append(img),p1,p2,p3,p4))));
 
-
+      
+      
   }
+
+  
+
+  
+
  }
 
 formEl.on("submit", handleFormSubmit);
