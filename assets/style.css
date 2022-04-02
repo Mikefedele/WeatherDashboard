@@ -7,6 +7,10 @@
   height: 5em;
 
 }
+
+.card {
+  border: 0;
+}
 #name {
   text-align: center;
   text-align: center;
@@ -37,3 +41,28 @@
   margin: 0 5px;
 }
 
+#future {
+  display: flex;
+  justify-content: space-around;
+}
+
+.uv-green {
+  background-color: green;
+}
+
+.uv-orange {
+  background-color: orange;
+}
+.uv-red {
+  background-color: red;
+}
+.col-4 {
+  display: block;
+}
+.form-group {
+  margin-left: 0;
+}
+
+.p-2 {
+  border: 1px solid black;
+}

@@ -23,6 +23,7 @@ var buttonsList = document.getElementById("recentbtns")
 //todo set city name to show in current display
 //todo have last searched show on page reload/open
 
+buildMenu();
 
 
 var handleFormSubmit = function (event) {
@@ -38,54 +39,49 @@ var handleFormSubmit = function (event) {
   }
   
   if(recentSearch.indexOf(cityName) === -1){
-    console.log(cityName);
     recentSearch.push(cityName);
     localStorage.setItem("recentSearches", JSON.stringify(recentSearch))
-    cityName.value = '';
+    if (recentSearch.length > 5) {
+    var x = recentSearch.shift() 
+    console.log(x);
+    }
 
   };
- 
+  
+
 
   fetchCity(cityName);
 
 
   localStorage.setItem("lastSearch", cityName); 
+ 
+  cityNameEl.val("");
   
-
 };
-if (recentSearch[i] == 5) {
-  recentShift = recentSearch.shift()
-
-  };
+//todo 
 
 
-for (var i = 0; i < recentSearch.length; i++) {
-  var myButtons = recentSearch[i];
-  console.log(myButtons);
+// if (recentSearch[i] == 5) {
+//   recentShift = recentSearch.shift()
+// console.log(recentShift)
+//   };
 
-var recentButtons = document.createElement("button");
-  buttonsList.appendChild(recentButtons);
-  recentButtons.setAttribute("class", "cityList btn-outline-secondary");
-  recentButtons.setAttribute("type", "button");
-  recentButtons.textContent = recentSearch[i];
+function buildMenu() {
 
+  for (var i = 0; i < recentSearch.length; i++) {
+      
+  
+  var recentButtons = document.createElement("button");
+    buttonsList.appendChild(recentButtons);
+    recentButtons.setAttribute("class", "cityList btn-outline-secondary");
+    recentButtons.setAttribute("type", "button");
+    recentButtons.textContent = recentSearch[i];
+  
+  }
 }
  
 
-{/* <button type="button" class="btn btn-outline-secondary">Secondary</button> */}
 
-// add last-searched-city data into savedCities[]
-//  if (savedCities.indexOf(city) < 0) {
-//    savedCities.push(city);
-//  }
-
-//  recentSearches[] to localStorage
-//  localStorage.setItem("lastSearched", city);
-//
-
-// if (submitted.addEventListener) {
-//   submitted.addEventListener("click", getWeather, false);
-// }
 
 var fetchCity = function (cityName) {
   console.log(cityName);
@@ -103,14 +99,13 @@ var fetchCity = function (cityName) {
       return response.json();
     })
     .then(function (data) {
-      console.log({ data });
 
       var lat = data[0].lat;     
       var lon = data[0].lon;
       getWeather(lat, lon);
       
       
-
+      cityName.value = "";
       // var currentState = function (name, state) {
       //   var headerEl = $('<h3>');
       //   var showState = name.concat(',', state);
@@ -122,6 +117,9 @@ var fetchCity = function (cityName) {
     });
 };
 function getWeather(lat, lon) {
+  
+  
+  
   fetch(
     `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly,alerts&appid=${apiKey}
   `,
@@ -132,29 +130,27 @@ function getWeather(lat, lon) {
     }
   )
     .then(function (response) {
-      console.log(response);
+      // console.log(response);
 
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      // console.log(data);
       var temp = data.current.temp;
-      console.log(temp);
+      // console.log(temp);
       var day = moment.unix(data.current.dt).format("ddd, MMMM Do, YYYY");
-      console.log(day);
       //buildHTML
 
       var today = document.getElementById("currentLoc");
       var feelsLike = data.current.feels_like;
       var humidity = data.current.humidity;
 
-      console.log(feelsLike);
-      console.log(humidity);
+
 
       var currentHumidity = data.current.humidity;
       var currentUV = data.current.uvi;
       var currentTemp = data.current.temp;
-      var currentIcon = data.current.weather[0].icon;
+      var currentIcon = 'http://openweathermap.org/img/wn/' + data.current.weather[0].icon + '@2x.png';
 
       var divEl = document.createElement("div");
       var currentList = document.createElement("ul");
@@ -165,8 +161,17 @@ function getWeather(lat, lon) {
       var li3 = document.createElement("li3");
       li3.setAttribute("class","list-group-item");
       var icon = document.createElement("img");
-      icon.setAttribute("src", currentIcon + ".png")
+      icon.setAttribute("src", currentIcon);
+      if (currentUV < 4 ) {
+        li3.setAttribute("class", "uv-green list-group-item")
+       }
+       else if ((currentUV >= 4 < 8)) {
+        li3.setAttribute("class", "uv-orange list-group-item")
+       };
 
+       if (currentUV >= 8) {
+        li3.setAttribute("class", "uv-red list-group-item")
+       }
       
 
       
@@ -180,6 +185,7 @@ function getWeather(lat, lon) {
       currentDataEl.append(currentList);
       currentList.append(divEl);
       currentList.append(li1);
+      li1.append(icon)
 
 
 
@@ -201,15 +207,13 @@ function getWeather(lat, lon) {
 }
 
 function fiveDayInfo(futureArray) {
-  console.log(futureArray);
   
   var futureTitle = $("<h4>").addClass("mt-3 col-12").text("5- Day Forecast: ")
   var cardRow = $("<div>").addClass("row").attr("id","future")
 $("#5-Day").append(futureTitle);
 $(".parent").append(cardRow)
   for (var i = 0; i < 5; i++) {
-    var futureDay = futureArray[i];
-    console.log(futureDay);
+     futureArray[i];
 
     var uvi = futureArray[i].uvi;
     var descrip = futureArray[i].weather[0].description;
