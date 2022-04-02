@@ -2,8 +2,8 @@
   border: 1px solid black;
 } */
 #header {
-  justify-content: center;
-  text-align: center;
+  /* justify-content: center; */
+  /* text-align: center; */
   height: 5em;
 
 }
@@ -17,6 +17,8 @@
   padding: 0;
   margin-top: 1rem;
   background-color: lightblue;
+  display: flex;
+  justify-content: space-around;
 
 }
 
@@ -28,6 +30,10 @@
 
 .recentSearches {
   margin-top: 10px;
+  justify-content: center;  
 }
 
-#
+.cityList {
+  margin: 0 5px;
+}
+

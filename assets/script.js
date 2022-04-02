@@ -19,7 +19,7 @@ var cityName = "";
 var buttonsList = document.getElementById("recentbtns")
 
 
-//TODO: CREATE PAST SEARCHES BUTTONS
+//TODO: Atag & src PAST SEARCHES BUTTONS
 //todo set city name to show in current display
 //todo have last searched show on page reload/open
 
@@ -41,34 +41,38 @@ var handleFormSubmit = function (event) {
     console.log(cityName);
     recentSearch.push(cityName);
     localStorage.setItem("recentSearches", JSON.stringify(recentSearch))
+    cityName.value = '';
 
   };
-  //is this working?
-  if(recentSearch.indexOf(cityName) === 5){    
-    recentSearches.pop();
-  };
+ 
 
   fetchCity(cityName);
 
-  
-
 
   localStorage.setItem("lastSearch", cityName); 
-  // formEl.value = "";
   
 
 };
+if (recentSearch[i] == 5) {
+  recentShift = recentSearch.shift()
 
-for (var i = 0; i < 5; i++) {
+  };
+
+
+for (var i = 0; i < recentSearch.length; i++) {
   var myButtons = recentSearch[i];
   console.log(myButtons);
 
 var recentButtons = document.createElement("button");
   buttonsList.appendChild(recentButtons);
-  recentButtons.setAttribute("class", "cityList");
+  recentButtons.setAttribute("class", "cityList btn-outline-secondary");
+  recentButtons.setAttribute("type", "button");
   recentButtons.textContent = recentSearch[i];
 
 }
+ 
+
+{/* <button type="button" class="btn btn-outline-secondary">Secondary</button> */}
 
 // add last-searched-city data into savedCities[]
 //  if (savedCities.indexOf(city) < 0) {
@@ -155,8 +159,17 @@ function getWeather(lat, lon) {
       var divEl = document.createElement("div");
       var currentList = document.createElement("ul");
       var li1 = document.createElement("li1");
+      li1.setAttribute("class","list-group-item");
       var li2 = document.createElement("li2");
+      li2.setAttribute("class","list-group-item");
       var li3 = document.createElement("li3");
+      li3.setAttribute("class","list-group-item");
+      var icon = document.createElement("img");
+      icon.setAttribute("src", currentIcon + ".png")
+
+      
+
+      
 
       li1.textContent = `Temp: ${currentTemp}`;
       li2.textContent = "Humidity: " + currentHumidity;

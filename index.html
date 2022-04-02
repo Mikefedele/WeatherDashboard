@@ -19,11 +19,7 @@
   <body>
     <div class="jumbotron jumbotron-fluid" id="header">
       <h1 class="h1" id="name">Weather Dashboard</h1>
-
-      <div class="container">
-
-        <!-- <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p> -->
-      </div>
+      <h1 id="currentLoc"></h1>
     </div>
 
     <main>
@@ -39,40 +35,36 @@
                 </div>
               </div>
 
-              <button type="submit" id="submitButton" value="Submit" class="btn btn-info">
+              <button
+                type="submit"
+                id="submitButton"
+                value="Submit"
+                class="btn btn-info"
+              >
                 Submit
               </button>
-              
             </form>
           </div>
-          <div class="jumbotron jumbotron-fluid col-8 currentDay">
-            <h2 id="currentLoc">Current Forecast</h2>
-              <ul id="currentData">
+          <div id="buttonColumn"></div>
 
-              </ul>
-              
-            
-              
-                       
-                <!-- <span id="currentDay"></span> -->
-              
-              <!-- <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p> -->
-            </div>
+          <div class="card" style="width: 18rem">
+            <ul id="currentData" class="list-group list-group-flush">
+              <!-- Current Day Card will appear here -->
+            </ul>
           </div>
+
+          <!-- <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p> -->
         </div>
       </div>
 
-      
       <div class="row recentSearches">
-        <ul id="recentbtns">
-          
-        </ul>
+        <ul id="recentbtns"></ul>
+
       </div>
 
-
       <div class="parent">
-      <div class="row" id="5-Day" style = "border: 1px solid black;"></div>
-    </div>
+        <div class="row" id="5-Day" style="border: 1px solid black"></div>
+      </div>
     </main>
 
     <script
