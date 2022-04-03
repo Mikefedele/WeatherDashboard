@@ -16,7 +16,8 @@ console.log(lastSearch);
 var today = document.getElementById("currentLoc");
 today.textContent = moment().format("ddd, MMMM Do, YYYY");
 var cityName = "";
-var buttonsList = document.getElementById("recentbtns")
+var buttonsList = document.getElementById("recentbtns");
+var buttonArray = "";
 
 
 //TODO: Atag & src PAST SEARCHES BUTTONS
@@ -26,18 +27,13 @@ var buttonsList = document.getElementById("recentbtns")
 buildMenu();
 
 
-var handleFormSubmit = function (event) {
-  
+var handleFormSubmit = function (event) {  
   event.preventDefault();
-
   var cityName = cityNameEl.val();
-
-
   if (!cityName) {
     alert("Please select a city.");
     return;
-  }
-  
+  }  
   if(recentSearch.indexOf(cityName) === -1){
     recentSearch.push(cityName);
     localStorage.setItem("recentSearches", JSON.stringify(recentSearch))
@@ -45,16 +41,10 @@ var handleFormSubmit = function (event) {
     var x = recentSearch.shift() 
     console.log(x);
     }
-
   };
-  
-
 
   fetchCity(cityName);
-
-
-  localStorage.setItem("lastSearch", cityName); 
- 
+  localStorage.setItem("lastSearch", cityName);  
   cityNameEl.val("");
   
 };
@@ -76,9 +66,18 @@ function buildMenu() {
     recentButtons.setAttribute("class", "cityList btn-outline-secondary");
     recentButtons.setAttribute("type", "button");
     recentButtons.textContent = recentSearch[i];
-  
-  }
-}
+    var buttonArray = recentSearch[i];
+    console.log(buttonArray);
+
+//      function buttonClicks() {
+//     var recentfetchCity = fetchCity(buttonArray);
+//     var recentgetWeather = getWeather(recentfetchCity);
+//     addEventListener.recentButtons("click", recentgetWeather)
+//   }
+
+
+// buttonClicks()
+}}
  
 
 
@@ -106,14 +105,7 @@ var fetchCity = function (cityName) {
       
       
       cityName.value = "";
-      // var currentState = function (name, state) {
-      //   var headerEl = $('<h3>');
-      //   var showState = name.concat(',', state);
-      //   headerEl.addClass('currentState').text(showState);
-      //   headerEl.appendTo(currentDay);
-
-      //   currentState();
-      // };
+      
     });
 };
 function getWeather(lat, lon) {
@@ -270,8 +262,12 @@ $(".parent").append(cardRow)
   
 
  }
-
 formEl.on("submit", handleFormSubmit);
+
+
+
+// }
+
 
 
 
