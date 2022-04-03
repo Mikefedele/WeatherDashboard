@@ -20,7 +20,7 @@
 .jumbotron {
   padding: 0;
   margin-top: 1rem;
-  background-color: lightblue;
+  background-color: rgb(23, 117, 199);
   display: flex;
   justify-content: space-around;
 
@@ -44,6 +44,7 @@
 #future {
   display: flex;
   justify-content: space-around;
+  background-color: aliceblue;
 }
 
 .uv-green {
@@ -65,4 +66,9 @@
 
 .p-2 {
   border: 1px solid black;
+}
+
+.topRow {
+  display: flex;
+  flex-wrap: nowrap;
 }

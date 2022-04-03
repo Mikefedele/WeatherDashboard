@@ -20,9 +20,10 @@ var buttonsList = document.getElementById("recentbtns");
 var buttonArray = "";
 
 
+
 //TODO: Atag & src PAST SEARCHES BUTTONS
 //todo set city name to show in current display
-//todo have last searched show on page reload/open
+
 
 buildMenu();
 
@@ -37,14 +38,25 @@ var handleFormSubmit = function (event) {
   if(recentSearch.indexOf(cityName) === -1){
     recentSearch.push(cityName);
     localStorage.setItem("recentSearches", JSON.stringify(recentSearch))
-    if (recentSearch.length > 5) {
+    // todo shift not replacing oldest button
+    if (recentSearch.length >= 5) {
     var x = recentSearch.shift() 
     console.log(x);
     }
   };
 
   fetchCity(cityName);
-  localStorage.setItem("lastSearch", cityName);  
+  localStorage.setItem("lastSearch", cityName); 
+
+
+  currentCardEl = document.getElementById("currentCard");
+  var cardTitleEl = document.createElement("h2");
+  cardTitleEl.setAttribute("class", "card-title");
+  cardTitleEl.textContent = cityName;
+  currentCardEl.append(cardTitleEl);
+
+ 
+
   cityNameEl.val("");
   
 };
@@ -59,7 +71,10 @@ var handleFormSubmit = function (event) {
 function buildMenu() {
 
   for (var i = 0; i < recentSearch.length; i++) {
-      
+    //use break to stop the buttons after 5
+      if (i == 5) {
+        break;
+      }
   
   var recentButtons = document.createElement("button");
     buttonsList.appendChild(recentButtons);
@@ -69,11 +84,21 @@ function buildMenu() {
     var buttonArray = recentSearch[i];
     console.log(buttonArray);
 
-//      function buttonClicks() {
+
+    
+
+  //  var buttonClicks = function() {{
+  //   var x = fetchCity(buttonArray);
+  //  }
+  //    getWeather(x);    
+  // }
+  // buttonClicks();
+  // console.log(buttonClicks);
+
 //     var recentfetchCity = fetchCity(buttonArray);
 //     var recentgetWeather = getWeather(recentfetchCity);
 //     addEventListener.recentButtons("click", recentgetWeather)
-//   }
+    
 
 
 // buttonClicks()
@@ -143,7 +168,6 @@ function getWeather(lat, lon) {
       var currentUV = data.current.uvi;
       var currentTemp = data.current.temp;
       var currentIcon = 'http://openweathermap.org/img/wn/' + data.current.weather[0].icon + '@2x.png';
-
       var divEl = document.createElement("div");
       var currentList = document.createElement("ul");
       var li1 = document.createElement("li1");
@@ -165,15 +189,12 @@ function getWeather(lat, lon) {
         li3.setAttribute("class", "uv-red list-group-item")
        }
       
-
       
-
       li1.textContent = `Temp: ${currentTemp}`;
       li2.textContent = "Humidity: " + currentHumidity;
       li3.textContent = "UV Index: " + currentUV;
 
       today.textContent = day;
-
       currentDataEl.append(currentList);
       currentList.append(divEl);
       currentList.append(li1);
