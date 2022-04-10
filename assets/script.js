@@ -110,7 +110,7 @@ function buildMenu() {
 var fetchCity = function (cityName) {
   console.log(cityName);
   fetch(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`,
+    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${apiKey}`,
     {
       method: "GET", //GET is the default.
       credentials: "same-origin", // include, *same-origin, omit
@@ -167,7 +167,7 @@ function getWeather(lat, lon) {
       var currentHumidity = data.current.humidity;
       var currentUV = data.current.uvi;
       var currentTemp = data.current.temp;
-      var currentIcon = 'http://openweathermap.org/img/wn/' + data.current.weather[0].icon + '@2x.png';
+      var currentIcon = 'https://openweathermap.org/img/wn/' + data.current.weather[0].icon + '@2x.png';
       var divEl = document.createElement("div");
       var currentList = document.createElement("ul");
       var li1 = document.createElement("li1");
@@ -245,7 +245,7 @@ $(".parent").append(cardRow)
 
     var img = $("<img>").attr(
       "src",
-      "http://openweathermap.org/img/w/" +
+      "https://openweathermap.org/img/w/" +
         futureArray[i].weather[0].icon +
         ".png"
     );
